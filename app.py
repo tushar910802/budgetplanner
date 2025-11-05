@@ -192,7 +192,8 @@ class MMMBudgetOptimiser:
                 'mape': mape
             }
             
-            st.write(f"Model for {BRAND_DISPLAY_MAP.get(brand, brand.upper())} built. R²: {r2:.4f}")
+            # --- MODIFIED: Removed R² from this message, now just confirms build ---
+            # st.write(f"Model for {BRAND_DISPLAY_MAP.get(brand, brand.upper())} built.")
     
     def predict_kpi(self, brand: str, weekly_spend_dict: Dict[str, float]) -> float:
         """
@@ -402,7 +403,10 @@ class MMMBudgetOptimiser:
         pass
     
     def plot_model_performance(self, figsize=(15, 10)):
-        """Plot actual vs predicted KPI for all brands"""
+        """
+        Plot actual vs predicted KPI for all brands.
+        REMOVED: R² from title.
+        """
         brands = list(self.models.keys())
         n_brands = len(brands)
         
@@ -432,8 +436,8 @@ class MMMBudgetOptimiser:
             ax.plot(weeks, model['y_actual'], label='Actual', linewidth=2, marker='o', markersize=4, alpha=0.9, color=COLOR_ACTUAL)
             ax.plot(weeks, model['y_pred'], label='Predicted', linewidth=2, marker='s', markersize=4, alpha=0.9, color=COLOR_PREDICTED)
             
-            # --- MODIFIED: Title now shows the new R² ---
-            ax.set_title(f'Brand {brand_display} - KPI Performance (R² = {model["r2"]:.3f})', 
+            # --- MODIFIED: Title no longer shows R² ---
+            ax.set_title(f'Brand {brand_display} - KPI Performance', 
                          fontsize=12, fontweight='bold', color=COLOR_TITLE)
             
             ax.set_xlabel('Week', color=COLOR_TEXT)
@@ -816,7 +820,7 @@ class MMMBudgetOptimiser:
 
 # =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=
 # END: MMMBudgetOptimiser CLASS
-# =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=
+# =_=_=_-_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=
 
 
 # =_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=
@@ -978,12 +982,11 @@ if fig_budget:
 
 # --- Channel & Model Plots in Tabs ---
 st.subheader("Detailed Plots")
-# --- UPDATED: Removed "Curves" tabs ---
+# --- UPDATED: Removed "Model Performance" tab ---
 tab_list = [
     "Bobbi Brown Channels",
     "MAC Channels",
     "Too Faced Channels",
-    "Model Performance"
 ]
 tabs = st.tabs(tab_list)
 
@@ -1013,12 +1016,12 @@ with tabs[2]: # Too Faced Channels
     if fig_ch_tf:
         st.pyplot(fig_ch_tf)
 
-with tabs[3]: # Model Performance
-    st.write("Actual vs. Predicted KPI for the base models (from one-time training)")
-    st.write(f"Models now include Seasonality. Check R² values in titles.")
-    fig_model_perf = optimiser.plot_model_performance(figsize=(10, 8))
-    if fig_model_perf:
-        st.pyplot(fig_model_perf)
+# --- REMOVED: Model Performance Tab ---
+# with tabs[3]: # Model Performance
+#     st.write("Actual vs. Predicted KPI for the base models (from one-time training)")
+#     fig_model_perf = optimiser.plot_model_performance(figsize=(10, 8))
+#     if fig_model_perf:
+#         st.pyplot(fig_model_perf)
 
 # --- Results Dataframe & Download ---
 st.subheader("Detailed Allocation Data")
